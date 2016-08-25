@@ -3,6 +3,7 @@
 <html>
 <head>
     <script src="js/three.min.js"></script>
+    <script src="js/OrbitControls.js"></script>
 </head>
 <body style= "margin: 0; padding:0">
 <script>
@@ -28,6 +29,8 @@ function createCamera() {
   camera.position.y = 32;
   camera.position.z = 32;
   camera.lookAt(scene.position);
+
+  cameraControl = new THREE.OrbitControls(camera);
 }
 
 function createLight() {
@@ -77,6 +80,8 @@ function init() {
 }
 
 function render() {
+
+  cameraControl.update();
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
