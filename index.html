@@ -34,12 +34,13 @@ function createCamera() {
 }
 
 function createLight() {
-  var spotLight = new THREE.SpotLight(0xffffff);
-  spotLight.position.set(10, 20, 20);
-  spotLight.shadowCameraNear = 20;
-  spotLight.shadowCameraFar = 50;
-  spotLight.castShadow = true;
-  scene.add(spotLight);
+  var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(100, 10, -50);
+  directionalLight.name = 'directional';
+  scene.add(directionalLight);
+
+  var ambientLight = new THREE.AmbientLight(0x111111);
+  scene.add(ambientLight);
 }
 
 function createEarthMaterial() {
@@ -50,7 +51,7 @@ function createEarthMaterial() {
     earthTexture.needsUpdate = true;
   });
 
-  var earthMaterial = new THREE.MeshBasicMaterial();
+  var earthMaterial = new THREE.MeshPhongMaterial();
   earthMaterial.map = earthTexture;
   return earthMaterial;
 }
@@ -63,6 +64,25 @@ function  createEarth() {
   scene.add(earthMesh);
 }
 
+function createClouds() {
+  var sphereGeometry = new THREE.SphereGeometry(15.1, 30, 30);
+  var cloudsTexture = new THREE.Texture();
+
+  var loader = new THREE.ImageLoader();
+  loader.load('assets/fair_clouds_1k.png', function(image) {
+    cloudsTexture.image = image;
+    cloudsTexture.needsUpdate = true;
+  });
+
+  var cloudsMaterial = new THREE.MeshPhongMaterial();
+  cloudsMaterial.map = cloudsTexture;
+  cloudsMaterial.transparent = true;
+
+  var cloudsMesh = new THREE.Mesh(sphereGeometry, cloudsMaterial);
+  cloudsMesh.name = 'clouds';
+  scene.add(cloudsMesh);
+}
+
 function init() {
 
   scene = new THREE.Scene();
@@ -72,6 +92,7 @@ function init() {
   createLight();
 
   createEarth();
+  createClouds();
 
   document.body.appendChild(renderer.domElement);
 
@@ -82,6 +103,9 @@ function init() {
 function render() {
 
   cameraControl.update();
+
+  scene.getObjectByName('earth').rotation.y += 0.0005;
+  scene.getObjectByName('clouds').rotation.y += 0.0007;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
