@@ -104,6 +104,25 @@ function createClouds() {
   scene.add(cloudsMesh);
 }
 
+function createStarfield() {
+  var sphereGeometry = new THREE.SphereGeometry(90, 32, 32);
+  var envTexture = new THREE.Texture();
+
+  var loader = new THREE.ImageLoader();
+  loader.load('assets/galaxy_starfield.png', function(image) {
+    envTexture.image = image;
+    envTexture.needsUpdate = true;
+  });
+
+  var envMaterial = new THREE.MeshBasicMaterial();
+  envMaterial.map = envTexture;
+  envMaterial.side = THREE.BackSide;
+
+  var mesh = new THREE.Mesh(sphereGeometry, envMaterial);
+  scene.add(mesh);
+
+}
+
 function init() {
 
   scene = new THREE.Scene();
@@ -112,6 +131,7 @@ function init() {
   createCamera();
   createLight();
 
+  createStarfield();
   createEarth();
   createClouds();
 
