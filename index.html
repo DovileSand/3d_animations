@@ -35,9 +35,27 @@ function createCamera() {
 }
 
 function loadModel() {
+
+  var texture = new THREE.Texture();
+  var loader = new THREE.ImageLoader();
+  loader.load('assets/lee_diffuse.jpg', function(image) {
+    texture.image = image;
+    texture.needsUpdate = true;
+  });
+
+  var normal_texture = new THREE.Texture();
+  var loader = new THREE.ImageLoader();
+  loader.load('assets/lee_normal_tangent.jpg', function(image) {
+    normal_texture.image = image;
+    normal_texture.needsUpdate = true;
+  });
+
   var material = new THREE.MeshPhongMaterial({
     specular: 0x222222,
-    shiness: 35
+    shininess: 35,
+    map: texture,
+    normalMap: normal_texture,
+    normalScale: new THREE.Vector2(0.8, 0.8)
   });
 
   var loader = new THREE.OBJLoader();
